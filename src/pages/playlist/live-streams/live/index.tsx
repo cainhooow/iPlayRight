@@ -48,7 +48,7 @@ export default function LiveView() {
   }
 
   function handleSearch() {
-    window.location.href = `/playlist/${
+    window.location.href = `${import.meta.env.VITE_BASE_URL}playlist/${
       playlist?.id
     }/live-streams?q=${encodeURIComponent(searchText)}`;
   }
@@ -136,10 +136,10 @@ export default function LiveView() {
         }}
       />
       <div className="py-20 px-2">
-        <div className="flex justify-between gap-4">
+        <div className="flex flex-col sm:flex-row justify-between gap-4">
           <div className="w-full">
             {liveStream && (
-              <div className="flex flex-col ml-2 mt-2">
+              <div className="flex flex-col mt-2">
                 <HlsPlayer
                   epg={streamEpg as StreamEpg[]}
                   stream={currentStream as Stream}

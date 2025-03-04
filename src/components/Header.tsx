@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { LucideArrowLeft, LucideSearch } from "lucide-react";
-import { Input } from "./ui/input";
+import { Input } from "@/components/ui/input";
 import { Playlist } from "@/types/Playlist";
 
 type SearchTypes = "redirect" | "handle";
@@ -28,7 +28,7 @@ export default function Header({ options }: { options: HeaderOptions }) {
       return;
     }
 
-    window.location.href = `/playlist/${
+    window.location.href = `${import.meta.env.VITE_BASE_URL}playlist/${
       options.playlist.id
     }/live-streams?q=${encodeURIComponent(options.search.searchText)}`;
   }
@@ -54,11 +54,11 @@ export default function Header({ options }: { options: HeaderOptions }) {
         </div>
         <div className="flex items-center">
           <div className="relative flex w-full">
-            <div className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground">
-              <LucideSearch className="h-4 w-4" />
-            </div>
             {options.search && (
               <>
+                <div className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground">
+                  <LucideSearch className="h-4 w-4" />
+                </div>
                 <Input
                   className="pl-8 rounded-r-none transition-all"
                   placeholder="Buscar"

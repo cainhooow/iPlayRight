@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useStorage } from "@/hooks/storage";
 import { Playlist } from "@/pages/painel";
 import { useEffect, useState } from "react";
@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { useLoading } from "@/hooks/loading";
+import Header from "@/components/Header";
 
 type server_info = {
   url: string;
@@ -86,28 +87,30 @@ export function PlaylistView() {
         setResponse(data);
       })
       .catch((err) => {
-        console.log({ err })
-        window.location.href = `/painel?error=${encodeURIComponent(err.message)}`
+        console.log({ err });
+        window.location.href = `${import.meta.env.VITE_BASE_URL}?error=${encodeURIComponent(
+          err.message
+        )}`;
       });
   }, [service, playlist]);
 
   return (
     <div>
-      <header className="bg-zinc-900/20">
-        <div className="flex container mx-auto py-5">
-          <div className="">
-            <h1 className="text-4xl font-bold">iPlayRight</h1>
-          </div>
-        </div>
-      </header>
-      <div className="container mx-auto my-20">
+      <Header
+        options={{
+          fixed: false,
+          back: "/",
+          playlist: playlist as Playlist,
+        }}
+      />
+      <div className="container mx-auto my-10">
         <div className="flex mb-5 justify-between">
           <div className="flex items-center gap-3">
-            <a href="/painel">
+            <Link to="/painel">
               <Button className="transition-all" variant="ghost" size={"icon"}>
                 <LucideArrowLeft />
               </Button>
-            </a>
+            </Link>
             <Avatar>
               <AvatarFallback>{playlist?.name.charAt(0)}</AvatarFallback>
             </Avatar>
@@ -117,7 +120,7 @@ export function PlaylistView() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <a href={`/playlist/${playlist?.id}/settings`}>
+            <Link to={`/playlist/${playlist?.id}/settings`}>
               <Button
                 className="transition-all"
                 variant="outline"
@@ -125,12 +128,11 @@ export function PlaylistView() {
               >
                 <LucideSettings2 />
               </Button>
-            </a>
+            </Link>
           </div>
         </div>
-
-        <div className="grid grid-cols-3 gap-6">
-          <div className="col-span-1 border border-zinc-700 h-[450px] hover:bg-zinc-900/20 cursor-pointer rounded-lg flex flex-col items-center justify-center">
+        <div className="grid grid-rows-2 sm:grid-cols-2 gap-6">
+          <Link tabIndex={0} to={`live-streams`} className="border sm:col-span-1 border-zinc-700 h-[450px] hover:bg-zinc-900/20 cursor-pointer rounded-lg flex flex-col items-center justify-center">
             <div className="flex gap-3 mb-2 items-center">
               <LucideTv size={30} />
               <h1 className="text-4xl font-bold">Live TV</h1>
@@ -138,8 +140,8 @@ export function PlaylistView() {
             <p className="text-xl text-center">
               Assista aos canais ao vivo da sua playlist
             </p>
-          </div>
-          <div className="col-span-2 border border-zinc-700 hover:bg-zinc-900/20 cursor-pointer rounded-lg flex flex-col items-center justify-center">
+          </Link>
+          <div tabIndex={0} className="border sm:col-span-2 border-zinc-700 hover:bg-zinc-900/20 cursor-pointer rounded-lg flex flex-col items-center justify-center">
             <div className="flex gap-3 mb-2 items-center">
               <LucideVideo size={30} />
               <h1 className="text-4xl font-bold">Séries</h1>
@@ -148,7 +150,7 @@ export function PlaylistView() {
               Assista às séries da sua playlist
             </p>
           </div>
-          <div className="col-span-3 border border-zinc-700 hover:bg-zinc-900/20 cursor-pointer rounded-lg flex flex-col items-center justify-center h-[350px]">
+          <div tabIndex={0} className="border sm:col-span-3 border-zinc-700 hover:bg-zinc-900/20 cursor-pointer rounded-lg flex flex-col items-center justify-center h-[350px]">
             <div className="flex gap-3 mb-2 items-center">
               <LucideVideotape size={30} />
               <h1 className="text-4xl font-bold">Filmes</h1>
@@ -158,7 +160,6 @@ export function PlaylistView() {
             </p>
           </div>
         </div>
-
         <div className="flex mb-5 mt-8 justify-between">
           <div className="flex items-center gap-3">
             {response && !loading ? (

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { PainelView } from "@/pages/painel";
 import { PlaylistView } from "@/pages/playlist";
 import LiveStreamsView from "@/pages/playlist/live-streams";
@@ -8,13 +8,12 @@ export const AppRoutes = () => {
   return (
     <Router>
       <Routes>
-        <Route
+        {/* <Route
+          index
           path="/"
-          element={
-            <div className="text-4xl font-bold">Welcome to IPT Master</div>
-          }
-        />
-        <Route path="painel" element={<PainelView />} />
+          // element={<>{window.location.href = "#/painel"}</>}
+        /> */}
+        <Route index path="/" element={<PainelView />} />
         <Route path="/playlist/:id" element={<PlaylistView />} />
         <Route
           path="/playlist/:id/live-streams"

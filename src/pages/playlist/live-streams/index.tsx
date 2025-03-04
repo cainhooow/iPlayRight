@@ -97,8 +97,7 @@ export default function LiveStreamsView() {
 
   useEffect(() => {
     if (!query || !streams) return;
-
-    // Use o query parameter diretamente ao invés de searchText
+    
     const searchTerm = query.toLowerCase().trim();
     const list = streams.filter(
       (item) =>
@@ -109,7 +108,7 @@ export default function LiveStreamsView() {
     setSearchText(query);
     setSearchStreams(list);
     setSearchView(true);
-  }, [query, streams]); // Removemos searchText das dependências
+  }, [query, streams]);
 
   return (
     <div>
@@ -126,7 +125,7 @@ export default function LiveStreamsView() {
           },
         }}
       />
-      <main className="grid grid-cols-4 py-32 px-5 relative">
+      <main className="grid sm:grid-cols-4 py-32 px-2 sm:px-5 relative">
         {searchView && (
           <div className="fixed top-0 bottom-0 left-0 w-full bg-background z-30 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-zinc-900">
             <div className="grid grid-cols-5 py-32 px-8">

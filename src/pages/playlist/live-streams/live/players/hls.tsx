@@ -184,12 +184,12 @@ const HlsPlayer = ({
         controlsList="nodownload nofullscreen noremoteplayback"
         controls={false}
         className={`bg-zinc-900/40 rounded-lg object-fill w-full ${
-          isFullscreen ? "h-screen" : "h-[650px]"
+          isFullscreen ? "h-screen" : "sm:h-[650px] h-[250px]"
         }`}
       />
 
       {connectionStatus && (
-        <div className="absolute inset-0 bg-black/80 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/80 rounded-lg flex items-center justify-center">
           <div className="text-white text-lg font-semibold">
             <h1>{connectionStatus}</h1>
           </div>
@@ -197,11 +197,11 @@ const HlsPlayer = ({
       )}
 
       <div
-        className={`absolute inset-0 transition-opacity duration-300 ${
+        className={`absolute inset-0 transition-opacity duration-300 rounded-lg ${
           showControls ? "opacity-100" : "opacity-0 cursor-none"
         }`}
       >
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+        <div className="absolute rounded-lg inset-0 bg-gradient-to-t from-black/50 to-transparent" />
         <div className="absolute top-0 left-0 ring-0 p-4">
           <h2 className="text-white text-lg font-semibold mb-2">
             {stream.name} - {epg.length > 0 && <span>{epg[0].title}</span>}

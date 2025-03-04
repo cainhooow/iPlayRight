@@ -15,7 +15,11 @@ export default function LiveCard({
   playlist: Playlist;
 }) {
   function goLive(stream: Stream) {
-    window.location.href = `/playlist/${playlist?.id}/live-streams/${stream.stream_id}`;
+    window.location.href = `${import.meta.env.VITE_BASE_URL}playlist/${
+      playlist?.id
+    }/live-streams/${stream.stream_id}`;
+    
+    window.location.reload();
   }
 
   return (
