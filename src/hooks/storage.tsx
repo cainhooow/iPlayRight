@@ -4,12 +4,12 @@ export interface Storage<T> {
   remove(key: string): void;
 }
 
-export const useStorage = <T,>(): Storage<T | null> => {
-  const set = (key: string, value: T) => {
+export const useStorage = () => {
+  const set = <T,>(key: string, value: T) => {
     localStorage.setItem(key, JSON.stringify(value));
   };
 
-  const get = (key: string) => {
+  const get = <T,>(key: string) => {
     const value = localStorage.getItem(key);
     if (value) {
       return JSON.parse(value) as T;

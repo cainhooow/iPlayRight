@@ -50,13 +50,12 @@ type Options = {
 };
 
 export default function PlaylistCreator({ options }: { options: Options }) {
-  const playlistStorage = useStorage<Playlist[]>();
-  const keyStorage = useStorage<string>();
+  const storage = useStorage();
 
   const addPlaylist = async (values: z.infer<typeof PlaylistSchema>) => {
     if (!options.states.playlists) {
-      keyStorage.set(`iikey`, generateUserAccessKey());
-      const key = keyStorage.get(`iikey`) as string;
+      storage.set(`iikey`, generateUserAccessKey());
+      const key = storage.get<string>(`iikey`) as string;
       const password = await hashText(values.password, key);
 
       const newItem: Playlist = {
@@ -67,7 +66,7 @@ export default function PlaylistCreator({ options }: { options: Options }) {
       };
 
       options.handlers.setPlaylist([newItem]);
-      playlistStorage.set("user_playlist", [newItem]);
+      storage.set("user_playlist", [newItem]);
 
       options.form.reset();
       options.handlers.setOpen(false);
@@ -82,11 +81,11 @@ export default function PlaylistCreator({ options }: { options: Options }) {
       return;
     }
 
-    if (!keyStorage.get(`iikey`)) {
-      keyStorage.set(`iikey`, generateUserAccessKey());
+    if (!storage.get<string>(`iikey`)) {
+      storage.set(`iikey`, generateUserAccessKey());
     }
 
-    const key = keyStorage.get(`iikey`) as string;
+    const key = storage.get<string>(`iikey`) as string;
     const password = await hashText(values.password, key);
 
     const newItem = {
@@ -98,12 +97,12 @@ export default function PlaylistCreator({ options }: { options: Options }) {
 
     options.handlers.setPlaylist([...options.states.playlists, newItem]);
 
-    playlistStorage.set("user_playlist", [
+    storage.set("user_playlist", [
       ...options.states.playlists,
       newItem,
     ]);
+    
     options.form.reset();
-
     options.handlers.setOpen(false);
   };
 

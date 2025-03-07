@@ -50,9 +50,8 @@ export type Response = {
 
 export function PlaylistView() {
   const params = useParams();
-  const playlistStorage = useStorage<Playlist[]>();
+  const storage = useStorage();
   const { setLoading, loading } = useLoading();
-  const keyStorage = useStorage<string>();
 
   const [playlist, setPlaylist] = useState<Playlist | null>(null);
   const [response, setResponse] = useState<Response | null>(null);
@@ -61,8 +60,8 @@ export function PlaylistView() {
   useEffect(() => {
     setLoading(true);
 
-    const storagePlaylist = playlistStorage.get("user_playlist");
-    const storageKey = keyStorage.get("iikey");
+    const storagePlaylist = storage.get<Playlist[]>("user_playlist");
+    const storageKey = storage.get<string>("iikey");
 
     if (!storagePlaylist || !storageKey) return;
     const item = storagePlaylist.filter((item) => item.id === params.id)[0];

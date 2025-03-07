@@ -2,14 +2,12 @@ import axios, { AxiosInstance } from "axios";
 import { useStorage } from "@/hooks/storage";
 import { PLAYER_ENDPOINT, PLAYER_QUERIES } from "@/utils/constants";
 import { unhashText } from "@/utils/iid";
-import { Playlist } from "@/pages/painel";
+import { Playlist } from "@/types/Playlist";
 
 export default class PlaylistService {
   private baseUrl: string | undefined;
   private api: AxiosInstance = axios;
-
-  private keyStorage = useStorage<string | undefined>();
-  private playlistStorage = useStorage<Playlist[]>();
+  private storage = useStorage();
 
   constructor({ base }: { base: string }) {
     this.baseUrl = base;
@@ -19,6 +17,7 @@ export default class PlaylistService {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
+        // "X-Requested-With": "XMLHttpRequest",
       },
     });
 
@@ -123,8 +122,8 @@ export default class PlaylistService {
   }
 
   private findPlaylistById(playlistId: string) {
-    return this.playlistStorage
-      .get("user_playlist")
+    return this.storage
+      .get<Playlist[]>("user_playlist")
       ?.filter((item) => playlistId === item.id)[0];
   }
 
@@ -135,7 +134,7 @@ export default class PlaylistService {
   }
 
   private async buildAuthQuery(username: string, password: string) {
-    const key = this.keyStorage.get("iikey");
+    const key = this.storage.get<string>("iikey");
     if (!key) return;
 
     const originalPassword = await unhashText(password, key);
@@ -143,8 +142,8 @@ export default class PlaylistService {
   }
 
   private async getUserCredentials(username: string) {
-    const key = this.keyStorage.get("iikey");
-    const playlist = this.playlistStorage.get("user_playlist");
+    const key = this.storage.get<string>("iikey");
+    const playlist = this.storage.get<Playlist[]>("user_playlist");
     if (!key || !playlist) return;
 
     const user = playlist.find((item) => item.username === username);

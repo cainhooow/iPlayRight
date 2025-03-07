@@ -26,8 +26,7 @@ export type StreamEpg = {
 export default function LiveView() {
   const params = useParams();
   const { /**loading,**/ setLoading } = useLoading();
-  const playlistStorage = useStorage<Playlist[]>();
-
+  const storage = useStorage();
   const [streams, setStreams] = useState<Stream[] | null>(null);
   const [categories, setCategories] = useState<Category[] | null>(null);
   const [mutualStreams, setMutualStreams] = useState<Stream[] | null>(null);
@@ -56,7 +55,7 @@ export default function LiveView() {
   useEffect(() => {
     setLoading(true);
     if (!params.id && !params.stream_id) return;
-    const storagePlaylist = playlistStorage.get("user_playlist");
+    const storagePlaylist = storage.get<Playlist[]>("user_playlist");
     if (!storagePlaylist) return;
 
     const item = storagePlaylist.filter((item) => item.id === params.id)[0];

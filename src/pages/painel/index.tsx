@@ -26,7 +26,7 @@ export type Playlist = {
 
 export function PainelView() {
   const [open, setOpen] = useState(false);
-  const playlistStorage = useStorage<Playlist[]>();
+  const storage = useStorage();
 
   const [playlists, setPlaylist] = useState<Playlist[] | null>(null);
   const form = useForm<z.infer<typeof PlaylistSchema>>({
@@ -45,7 +45,7 @@ export function PainelView() {
 
   useEffect(() => {
     if (!playlists) {
-      const data = playlistStorage.get("user_playlist");
+      const data = storage.get<Playlist[]>("user_playlist");
       if (data) {
         setPlaylist(data);
       }

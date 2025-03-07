@@ -35,7 +35,7 @@ export default function LiveStreamsView() {
 
   const { /** loading,**/ setLoading } = useLoading();
   // const searchInput = useRef<HTMLInputElement | null>(null);
-  const playlistStorage = useStorage<Playlist[]>();
+  const storage = useStorage();
   const [searchView, setSearchView] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [streams, setStreams] = useState<Stream[] | null>();
@@ -68,7 +68,7 @@ export default function LiveStreamsView() {
   useEffect(() => {
     setLoading(true);
     if (!params.id) return;
-    const storagePlaylist = playlistStorage.get("user_playlist");
+    const storagePlaylist = storage.get<Playlist[]>("user_playlist");
     if (!storagePlaylist) return;
 
     const item = storagePlaylist.filter((item) => item.id === params.id)[0];
@@ -97,7 +97,7 @@ export default function LiveStreamsView() {
 
   useEffect(() => {
     if (!query || !streams) return;
-    
+
     const searchTerm = query.toLowerCase().trim();
     const list = streams.filter(
       (item) =>
