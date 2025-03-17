@@ -61,7 +61,10 @@ export default function LiveView() {
     const item = storagePlaylist.filter((item) => item.id === params.id)[0];
     setPlaylist(item);
 
-    const playlistService = new PlaylistService({ base: item.url });
+    const playlistService = new PlaylistService({
+      base: item.url,
+      user: item.username,
+    });
     setService(playlistService);
   }, []);
 

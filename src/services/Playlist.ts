@@ -9,7 +9,7 @@ export default class PlaylistService {
   private api: AxiosInstance = axios;
   private storage = useStorage();
 
-  constructor({ base }: { base: string }) {
+  constructor({ base, user }: { base: string; user: string }) {
     this.baseUrl = base;
 
     this.api = axios.create({
@@ -19,6 +19,10 @@ export default class PlaylistService {
         Accept: "application/json",
         // "X-Requested-With": "XMLHttpRequest",
       },
+      params: {
+        username: user,
+      },
+      proxy: false,
     });
 
     this.api.interceptors.request.use((config) => {
@@ -35,14 +39,13 @@ export default class PlaylistService {
     const playlist = this.findPlaylistById(playlistId);
     if (!playlist) return;
 
-    const authQuery = await this.buildAuthQuery(
-      playlist.username,
-      playlist.password
-    );
-    if (!authQuery) return;
+    const credentials = await this.getUserCredentials(playlist.username);
 
-    const data = await this.api.get(`${authQuery}`);
-
+    const data = await this.api.get(PLAYER_ENDPOINT, {
+      params: {
+        password: credentials?.password,
+      },
+    });
     return data;
   }
 
@@ -50,16 +53,14 @@ export default class PlaylistService {
     const playlist = this.findPlaylistById(playlistId);
     if (!playlist) return;
 
-    const authQuery = await this.buildAuthQuery(
-      playlist.username,
-      playlist.password
-    );
+    const credentials = await this.getUserCredentials(playlist.username);
 
-    if (!authQuery) return;
-
-    const data = await this.api.get(
-      `${authQuery}&${PLAYER_QUERIES.PLAYER_ACTION}=${PLAYER_QUERIES.ACTIONS.CATEGORIES}`
-    );
+    const data = await this.api.get(PLAYER_ENDPOINT, {
+      params: {
+        password: credentials?.password,
+        [PLAYER_QUERIES.PLAYER_ACTION]: PLAYER_QUERIES.ACTIONS.CATEGORIES,
+      },
+    });
 
     return data;
   }
@@ -68,15 +69,14 @@ export default class PlaylistService {
     const playlist = this.findPlaylistById(playlistId);
     if (!playlist) return;
 
-    const authQuery = await this.buildAuthQuery(
-      playlist.username,
-      playlist.password
-    );
+    const credentials = await this.getUserCredentials(playlist.username);
 
-    const data = await this.api.get(
-      `${authQuery}&${PLAYER_QUERIES.PLAYER_ACTION}=${PLAYER_QUERIES.ACTIONS.STREAMS}&${PLAYER_QUERIES.FILTERS.CATEGORY_ID}=${PLAYER_QUERIES.DEFAULTS.CATEGORY_DEFAULT}`
-    );
-
+    const data = await this.api.get(PLAYER_ENDPOINT, {
+      params: {
+        password: credentials?.password,
+        [PLAYER_QUERIES.PLAYER_ACTION]: PLAYER_QUERIES.ACTIONS.STREAMS,
+      },
+    });
     return data;
   }
 
@@ -98,14 +98,15 @@ export default class PlaylistService {
     const playlist = this.findPlaylistById(playlistId);
     if (!playlist) return;
 
-    const authQuery = await this.buildAuthQuery(
-      playlist.username,
-      playlist.password
-    );
-    const data = await this.api.get(
-      `${authQuery}&${PLAYER_QUERIES.PLAYER_ACTION}=${PLAYER_QUERIES.ACTIONS.EPG}&${PLAYER_QUERIES.FILTERS.STREAM_ID}=${stream_id}`
-    );
+    const credentials = await this.getUserCredentials(playlist.username);
 
+    const data = await this.api.get(PLAYER_ENDPOINT, {
+      params: {
+        password: credentials?.password,
+        [PLAYER_QUERIES.PLAYER_ACTION]: PLAYER_QUERIES.ACTIONS.EPG,
+        [PLAYER_QUERIES.FILTERS.STREAM_ID]: stream_id,
+      },
+    });
     return data;
   }
 
@@ -131,14 +132,6 @@ export default class PlaylistService {
     const credentials = await this.getUserCredentials(username);
 
     return `/live/${credentials?.username}/${credentials?.password}`;
-  }
-
-  private async buildAuthQuery(username: string, password: string) {
-    const key = this.storage.get<string>("iikey");
-    if (!key) return;
-
-    const originalPassword = await unhashText(password, key);
-    return `${PLAYER_ENDPOINT}?${PLAYER_QUERIES.PLAYER_USER}=${username}&${PLAYER_QUERIES.PLAYER_PASSWORD}=${originalPassword}`;
   }
 
   private async getUserCredentials(username: string) {

@@ -67,7 +67,10 @@ export function PlaylistView() {
     const item = storagePlaylist.filter((item) => item.id === params.id)[0];
     setPlaylist(item);
 
-    const playlistService = new PlaylistService({ base: item.url });
+    const playlistService = new PlaylistService({
+      base: item.url,
+      user: item.username,
+    });
     setService(playlistService);
   }, []);
 
@@ -87,9 +90,9 @@ export function PlaylistView() {
       })
       .catch((err) => {
         console.log({ err });
-        window.location.href = `${import.meta.env.VITE_BASE_URL}?error=${encodeURIComponent(
-          err.message
-        )}`;
+        window.location.href = `${
+          import.meta.env.VITE_BASE_URL
+        }?error=${encodeURIComponent(err.message)}`;
       });
   }, [service, playlist]);
 
@@ -131,7 +134,11 @@ export function PlaylistView() {
           </div>
         </div>
         <div className="grid grid-rows-2 sm:grid-cols-2 gap-6">
-          <Link tabIndex={0} to={`live-streams`} className="border sm:col-span-1 border-zinc-700 h-[450px] hover:bg-zinc-900/20 cursor-pointer rounded-lg flex flex-col items-center justify-center">
+          <Link
+            tabIndex={0}
+            to={`live-streams`}
+            className="border sm:col-span-1 border-zinc-700 h-[450px] hover:bg-zinc-900/20 cursor-pointer rounded-lg flex flex-col items-center justify-center"
+          >
             <div className="flex gap-3 mb-2 items-center">
               <LucideTv size={30} />
               <h1 className="text-4xl font-bold">Live TV</h1>
@@ -140,7 +147,10 @@ export function PlaylistView() {
               Assista aos canais ao vivo da sua playlist
             </p>
           </Link>
-          <div tabIndex={0} className="border sm:col-span-2 border-zinc-700 hover:bg-zinc-900/20 cursor-pointer rounded-lg flex flex-col items-center justify-center">
+          <div
+            tabIndex={0}
+            className="border sm:col-span-2 border-zinc-700 hover:bg-zinc-900/20 cursor-pointer rounded-lg flex flex-col items-center justify-center"
+          >
             <div className="flex gap-3 mb-2 items-center">
               <LucideVideo size={30} />
               <h1 className="text-4xl font-bold">Séries</h1>
@@ -149,7 +159,10 @@ export function PlaylistView() {
               Assista às séries da sua playlist
             </p>
           </div>
-          <div tabIndex={0} className="border sm:col-span-3 border-zinc-700 hover:bg-zinc-900/20 cursor-pointer rounded-lg flex flex-col items-center justify-center h-[350px]">
+          <div
+            tabIndex={0}
+            className="border sm:col-span-3 border-zinc-700 hover:bg-zinc-900/20 cursor-pointer rounded-lg flex flex-col items-center justify-center h-[350px]"
+          >
             <div className="flex gap-3 mb-2 items-center">
               <LucideVideotape size={30} />
               <h1 className="text-4xl font-bold">Filmes</h1>
